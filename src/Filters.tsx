@@ -1,5 +1,7 @@
-import React from "react";
-import styled from "styled-components";
+import React, { FC } from 'react';
+import styled from 'styled-components';
+
+import { IFilters } from './App';
 
 const FiltersWrapper = styled.div`
   display: flex;
@@ -15,7 +17,13 @@ const FiltersWrapper = styled.div`
   }
 `;
 
-const Filters = ({ min, max, onFilterChange }: any) => (
+interface IProps {
+  min: number;
+  max: number;
+  onFilterChange: (newFilter: IFilters) => void;
+}
+
+const Filters: FC<IProps> = ({ min, max, onFilterChange }): JSX.Element => (
   <FiltersWrapper>
     <label>
       Min
@@ -25,7 +33,7 @@ const Filters = ({ min, max, onFilterChange }: any) => (
         onChange={(e) =>
           onFilterChange({ max, min: parseInt(e.target.value) || 0 })
         }
-      ></input>
+      />
     </label>
     <label>
       Max
@@ -35,7 +43,7 @@ const Filters = ({ min, max, onFilterChange }: any) => (
         onChange={(e) =>
           onFilterChange({ min, max: parseInt(e.target.value) || 0 })
         }
-      ></input>
+      />
     </label>
   </FiltersWrapper>
 );

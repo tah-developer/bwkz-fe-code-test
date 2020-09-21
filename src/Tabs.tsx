@@ -1,5 +1,5 @@
-import React from "react";
-import styled from "styled-components";
+import React, { FC } from 'react';
+import styled from 'styled-components';
 
 const TabsWrapper = styled.div`
   display: flex;
@@ -28,25 +28,28 @@ const TabsWrapper = styled.div`
     }
   }
 `;
+interface IProps {
+  onActivePageChange: (value: number) => void;
+  currentActivePage: number;
+}
 
-const Tabs = ({ currentActivePage, onActivePageChange }: any) => {
+const Tabs: FC<IProps> = ({ currentActivePage, onActivePageChange }) => {
   React.useEffect(() => {
-    window.addEventListener(
-      "onbeforeunload",
-      () => "Are you sure you want to leave this page?"
+    window.addEventListener('onbeforeunload', () =>
+      alert('Are you sure you want to leave this page?')
     );
   }, []);
 
   return (
     <TabsWrapper>
       <button
-        className={`${currentActivePage === 0 ? "inactive" : ""}`}
+        className={`${currentActivePage === 0 ? 'active' : ''}`}
         onClick={() => onActivePageChange(0)}
       >
         London
       </button>
       <button
-        className={`${currentActivePage === 1 ? "inactive" : ""}`}
+        className={`${currentActivePage === 1 ? 'active' : ''}`}
         onClick={() => onActivePageChange(1)}
       >
         All locations

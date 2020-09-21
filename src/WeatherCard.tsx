@@ -1,5 +1,7 @@
-import React from "react";
-import styled from "styled-components";
+import React, { FC } from 'react';
+import styled from 'styled-components';
+
+import { IDay } from './App';
 
 const TodayWeather = styled.div`
   display: flex;
@@ -39,7 +41,17 @@ const TodayIconWrapper = styled.div`
   }
 `;
 
-const WeatherCard = ({ name, forecast, getIconUrl }: any) => (
+interface IProps {
+  name: string;
+  forecast: IDay;
+  getIconUrl: (icon: string) => string;
+}
+
+const WeatherCard: FC<IProps> = ({
+  name,
+  forecast,
+  getIconUrl,
+}): JSX.Element => (
   <TodayWeather>
     <TodayInfosWrapper>
       <div className="c">{name}</div>

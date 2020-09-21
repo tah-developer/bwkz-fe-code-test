@@ -1,6 +1,8 @@
-import React from "react";
-import ForecastRowItem from "./ForecastRowItem";
-import styled from "styled-components";
+import React, { FC } from 'react';
+import ForecastRowItem from './ForecastRowItem';
+import styled from 'styled-components';
+
+import { IFilters, IDay } from './App';
 
 const ForecastRowWrapper = styled.div`
   display: flex;
@@ -18,14 +20,31 @@ const CityName = styled.div`
   padding-right: 16px;
 `;
 
-const ForecastRow = ({ filter, name, dayForecasts, getIconUrl }: any) => (
+interface IProps {
+  filter: IFilters;
+  name: string;
+  dayForecasts: IDay[];
+  getIconUrl: (icon: string) => string;
+}
+
+const ForecastRow: FC<IProps> = ({
+  filter,
+  name,
+  dayForecasts,
+  getIconUrl,
+}): JSX.Element => (
   <ForecastRowWrapper>
     <CityName>{name}</CityName>
-    {dayForecasts.map(({ day, temp, icon, desc, timestamp }: any) => {
-      if (filter.min && temp > filter.min) return null;
-      if (filter.max && temp < filter.max) return null;
+    {dayForecasts.map(({ day, temp, icon, desc }: IDay, i: number) => {
+      if (
+        (filter.min && temp > filter.min) ||
+        (filter.max && temp < filter.max)
+      )
+        return null;
+
       return (
         <ForecastRowItem
+          key={i}
           day={day}
           temp={temp}
           icon={icon}

@@ -1,5 +1,5 @@
-import React from "react";
-import styled from "styled-components";
+import React, { FC, useEffect, useState } from 'react';
+import styled from 'styled-components';
 
 const ForecastRowItemWrapper = styled.div`
   padding: 16px;
@@ -26,23 +26,29 @@ const ForecastRowItemWrapper = styled.div`
   }
 `;
 
-const ForecastRowItem = (props: any) => {
-  const [data, setData] = React.useState<any>({});
+interface IProps {
+  day: string;
+  temp: number;
+  icon: string;
+  desc: string;
+  getIconUrl: (icon: string) => string;
+}
 
-  React.useEffect(() => {
-    const { day, temp, icon, desc, getIconUrl } = props;
-
-    setData({ day, temp, icon, desc, getIconUrl });
-  }, [props]);
-
+const ForecastRowItem: FC<IProps> = ({
+  day,
+  temp,
+  icon,
+  desc,
+  getIconUrl,
+}): JSX.Element => {
   return (
     <ForecastRowItemWrapper>
-      <div className="d">{data.day}</div>
+      <div className="d">{day}</div>
       <div className="f">
-        {Math.round(data.temp)}°C
-        <img src={data.getIconUrl(data.icon)} alt="" />
+        {Math.round(temp)}°C
+        <img src={getIconUrl && getIconUrl(icon)} alt="icon" />
       </div>
-      <div className="d">{data.desc}</div>
+      <div className="d">{desc}</div>
     </ForecastRowItemWrapper>
   );
 };

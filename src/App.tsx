@@ -1,26 +1,26 @@
-import React, { useState, useEffect } from "react";
-import WeatherCard from "./WeatherCard";
-import Tabs from "./Tabs";
-import ForecastRow from "./ForecastRow";
-import Filters from "./Filters";
+import React, { useState, useEffect } from 'react';
+import WeatherCard from './WeatherCard';
+import Tabs from './Tabs';
+import ForecastRow from './ForecastRow';
+import Filters from './Filters';
 
-const cities = ["London,UK", "New York", "Mumbai", "Sydney", "Tokyo"];
-const KEY = "a3e3e6c71bdd4d7586933ac1a57de143";
+const cities = ['London,UK', 'New York', 'Mumbai', 'Sydney', 'Tokyo'];
+const KEY = 'a3e3e6c71bdd4d7586933ac1a57de143';
 const TODAY_WEATHER_API_URL =
-  "https://api.weatherbit.io/v2.0/current?city=London,UK&key=";
+  'https://api.weatherbit.io/v2.0/current?city=London,UK&key=';
 const FORECAST_WEATHER_API_URL =
-  "https://api.weatherbit.io/v2.0/forecast/daily?city=";
+  'https://api.weatherbit.io/v2.0/forecast/daily?city=';
 
-const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 const emptyCityForecast = {
-  name: "",
+  name: '',
   dayForecasts: [
     {
-      day: "",
+      day: '',
       temp: 0,
-      icon: "",
-      desc: "",
+      icon: '',
+      desc: '',
       timestamp: 0,
     },
   ],
@@ -28,6 +28,7 @@ const emptyCityForecast = {
 
 const handleGetIconUrl = (icon: string): string =>
   `https://www.weatherbit.io/static/img/icons/${icon}.png`;
+
 const retrieve = (data: any) => ({
   day: weekDays[new Date(data.ts * 1000).getDay()],
   temp: data.temp,
@@ -36,12 +37,27 @@ const retrieve = (data: any) => ({
   timestamp: data.ts,
 });
 
+export interface IFilters {
+  min: number;
+  max: number;
+}
+
+export interface IDay {
+  day: string;
+  desc: string;
+  icon: string;
+  temp: number;
+  timestamp: number;
+}
+
 const App = () => {
-  const [activePage, setActivePage] = useState<boolean>(false);
-  const handleActivePageChange = (value: boolean) => setActivePage(value);
+  const [activePage, setActivePage] = useState<number>(0);
   const [todayForecast, setTodayForecast] = useState<any>(emptyCityForecast);
   const [citiesForecast, setForecast] = useState<any[]>([emptyCityForecast]);
-  const [filter, setFilter] = useState<any>({ min: undefined, max: undefined });
+  const [filter, setFilter] = useState<IFilters>({ min: 0, max: 0 });
+
+  const handleActivePageChange = (value: number) => setActivePage(value);
+
   const getWeather = () => {
     fetch(`${TODAY_WEATHER_API_URL}${KEY}`)
       .then((res) => res.json())
@@ -50,6 +66,9 @@ const App = () => {
           name: data[0].city_name,
           dayForecasts: [retrieve(data[0])],
         });
+      })
+      .catch((err) => {
+        console.error('Request Error', err);
       });
 
     Promise.all(
@@ -67,13 +86,15 @@ const App = () => {
             ),
           }))
         );
+      })
+      .catch((err) => {
+        console.error('Forecast Request Error', err);
       });
   };
 
-  const handleFilterChange = (newFilter: any) => setFilter(newFilter);
-  useEffect(() => {
-    getWeather();
-  }, []);
+  const handleFilterChange = (newFilter: IFilters) => setFilter(newFilter);
+
+  useEffect(() => getWeather(), []);
 
   return (
     <>
@@ -81,14 +102,14 @@ const App = () => {
         currentActivePage={activePage}
         onActivePageChange={handleActivePageChange}
       />
-      {activePage === !!0 ? (
+      {!activePage && (
         <WeatherCard
           name={todayForecast.name}
           forecast={todayForecast.dayForecasts[0]}
           getIconUrl={handleGetIconUrl}
         />
-      ) : null}
-      {activePage === !!1 ? (
+      )}
+      {activePage > 0 && (
         <>
           <Filters
             min={filter.min}
@@ -105,7 +126,7 @@ const App = () => {
             />
           ))}
         </>
-      ) : null}
+      )}
     </>
   );
 };
