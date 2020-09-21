@@ -3,6 +3,11 @@
 - From the root directory use `npm install` then `npm start`
 - Application should launch in a new browser window (if not just go to http://localhost:3000)
 
+## Submission
+- Create a branch from master
+- Name it with your full name
+- Push your solution to the repository
+
 ## Testing
 - From the root directory use `npm run test`
 
